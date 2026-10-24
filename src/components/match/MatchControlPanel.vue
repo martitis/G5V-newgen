@@ -73,41 +73,6 @@
                   </div>
                 </v-col>
                 <v-col cols="12" md="6">
-                  <div class="d-flex align-center ga-2 mb-2">
-                    <v-number-input
-                      v-model="readyCount"
-                      :label="$t('Control.ReadyRequired')"
-                      :min="0"
-                      :max="10"
-                      density="compact"
-                      hide-details
-                      control-variant="split"
-                      style="max-width: 280px"
-                    />
-                    <v-btn
-                      size="small"
-                      color="primary"
-                      variant="tonal"
-                      :loading="busy === 'ready_required'"
-                      @click="send('ready_required', { count: readyCount ?? 0 })"
-                    >
-                      {{ $t("Control.Set") }}
-                    </v-btn>
-                  </div>
-                  <div class="d-flex align-center flex-wrap ga-2 mb-2">
-                    <span class="text-body-medium">{{ $t("Control.AddReadyTime") }}</span>
-                    <v-btn
-                      v-for="seconds in [60, 120, 300]"
-                      :key="seconds"
-                      size="small"
-                      variant="outlined"
-                      color="primary"
-                      :loading="busy === 'add_ready_time'"
-                      @click="send('add_ready_time', { seconds })"
-                    >
-                      +{{ seconds / 60 }} min
-                    </v-btn>
-                  </div>
                   <div class="d-flex align-center ga-2">
                     <v-select
                       v-model="mapChoice"
@@ -479,7 +444,6 @@ const tab = ref<"match" | "players" | "server" | "chat">("match");
 const actions = ref<InstanceType<typeof MatchAdminDialogs> | null>(null);
 const busy = ref<string | null>(null);
 const reply = ref("");
-const readyCount = ref<number | null>(0);
 const mapChoice = ref<string | null>(null);
 const teamNames = reactive<Record<1 | 2, string>>({ 1: "", 2: "" });
 const message = ref("");
