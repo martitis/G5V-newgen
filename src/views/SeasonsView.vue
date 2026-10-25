@@ -21,6 +21,8 @@
             density="compact"
             hide-details
           />
+        </template>
+        <template v-if="auth.isAdmin">
           <v-btn
             color="secondary"
             variant="tonal"

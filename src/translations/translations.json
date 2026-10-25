@@ -20,11 +20,11 @@
       "Stats": "Panel stats"
     },
     "Login": {
-      "SteamIdHint": "SteamID64 (7656…) or your profile link, e.g. steamcommunity.com/id/yourname",
+      "SteamIdHint": "SteamID64 (7656…) or your profile link, so your match stats show on your profile. You can leave it empty.",
       "title": "Sign in",
       "Login": "Sign in",
       "Register": "Create account",
-      "SteamIdLabel": "Your Steam account",
+      "SteamIdLabel": "Your Steam account (optional)",
       "UsernameLabel": "Username",
       "PasswordLabel": "Password",
       "OldPasswordLabel": "Old Password",
@@ -38,7 +38,7 @@
       "PasswordHint": "At least {n} characters",
       "RepeatPassword": "Repeat password",
       "PasswordsDiffer": "The passwords don't match",
-      "AdminNote": "A panel account can't be an admin until you've signed in with Steam once."
+      "AdminNote": "New accounts can look at everything; admins create and change matches, teams and servers."
     },
     "MatchAdmin": {
       "UpdateCallbacks": "Send panel address to server",
@@ -722,11 +722,11 @@
       "Stats": "Statistiques du panneau"
     },
     "Login": {
-      "SteamIdHint": "SteamID64 (7656…) ou le lien de votre profil, par ex. steamcommunity.com/id/votrenom",
+      "SteamIdHint": "SteamID64 (7656…) ou le lien de votre profil, pour voir vos statistiques sur votre profil. Vous pouvez le laisser vide.",
       "title": "Connexion",
       "Login": "Se connecter",
       "Register": "Créer un compte",
-      "SteamIdLabel": "Votre compte Steam",
+      "SteamIdLabel": "Votre compte Steam (facultatif)",
       "UsernameLabel": "Nom d'utilisateur",
       "PasswordLabel": "Mot de passe",
       "OldPasswordLabel": "Ancien mot de passe",
@@ -740,7 +740,7 @@
       "PasswordHint": "Au moins {n} caractères",
       "RepeatPassword": "Répéter le mot de passe",
       "PasswordsDiffer": "Les mots de passe ne correspondent pas",
-      "AdminNote": "Un compte du panel ne peut pas être admin avant une première connexion Steam."
+      "AdminNote": "Les nouveaux comptes peuvent tout consulter ; les admins créent et modifient matchs, équipes et serveurs."
     },
     "MatchAdmin": {
       "UpdateCallbacks": "Envoyer l'adresse du panneau au serveur",
@@ -1424,11 +1424,11 @@
       "Stats": "パネル統計"
     },
     "Login": {
-      "SteamIdHint": "SteamID64（7656…）またはプロフィールのリンク（例: steamcommunity.com/id/yourname）",
+      "SteamIdHint": "SteamID64（7656…）またはプロフィールのリンク。入力すると試合の統計がプロフィールに表示されます。空欄でも構いません。",
       "title": "サインイン",
       "Login": "サインイン",
       "Register": "アカウント作成",
-      "SteamIdLabel": "あなたの Steam アカウント",
+      "SteamIdLabel": "あなたの Steam アカウント（任意）",
       "UsernameLabel": "ユーザー名",
       "PasswordLabel": "パスワード",
       "OldPasswordLabel": "旧パスワード",
@@ -1442,7 +1442,7 @@
       "PasswordHint": "{n} 文字以上",
       "RepeatPassword": "パスワード（確認）",
       "PasswordsDiffer": "パスワードが一致しません",
-      "AdminNote": "パネルのアカウントは、一度 Steam でサインインするまで管理者になれません。"
+      "AdminNote": "新しいアカウントはすべて閲覧できます。試合・チーム・サーバーの作成と変更は管理者が行います。"
     },
     "MatchAdmin": {
       "UpdateCallbacks": "パネルのアドレスをサーバーに送信",

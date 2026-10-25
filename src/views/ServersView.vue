@@ -21,6 +21,8 @@
             density="compact"
             hide-details
           />
+        </template>
+        <template v-if="auth.isAdmin">
           <v-btn color="primary" prepend-icon="mdi-server-plus" @click="openDialog(null)">
             {{ $t("MyServers.New") }}
           </v-btn>

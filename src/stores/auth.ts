@@ -46,11 +46,9 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  /** Owner of something, or a super admin. */
+  /** May change something: an admin who owns it, or a super admin (other users only read). */
   function canEdit(ownerId: number | null | undefined) {
-    return (
-      loggedIn.value && (isSuperAdmin.value || (ownerId != null && ownerId === user.value?.id))
-    );
+    return isAdmin.value && (isSuperAdmin.value || (ownerId != null && ownerId === user.value?.id));
   }
 
   return {
