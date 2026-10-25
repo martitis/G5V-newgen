@@ -46,7 +46,7 @@
       <template #[`item.steam_id`]="{ item }">
         <span>{{ item.steam_id }}</span>
         <v-chip
-          v-if="!item.steam_verified"
+          v-if="item.steam_id && !item.steam_verified"
           size="x-small"
           color="warning"
           variant="tonal"
@@ -62,7 +62,7 @@
           <v-select
             :model-value="roleOf(item)"
             :items="roleItems"
-            :disabled="!item.steam_verified || savingId === item.id"
+            :disabled="(item.steam_id && !item.steam_verified) || savingId === item.id"
             :loading="savingId === item.id"
             density="compact"
             variant="outlined"
