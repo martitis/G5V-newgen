@@ -21,6 +21,9 @@ export function roundLabel(
   return t("Tournament.Round", { n: round });
 }
 
+/** "A", "B", ... for group 1, 2, ... */
+export const groupLetter = (group: number) => String.fromCharCode(64 + group);
+
 /** A slot can get a match: both teams known, none linked (a cancelled one is unlinked by the API). */
 export const canCreateMatch = (node: TournamentNode) =>
   node.status === "ready" &&

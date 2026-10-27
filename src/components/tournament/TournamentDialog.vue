@@ -137,6 +137,29 @@
               />
             </v-col>
           </v-row>
+          <v-row v-if="draft.format === 'groups_playoff'" density="compact">
+            <v-col cols="6" sm="3">
+              <v-number-input
+                v-model="settings.group_count"
+                :label="$t('Tournament.GroupCount')"
+                :min="1"
+                :max="16"
+                control-variant="split"
+              />
+            </v-col>
+            <v-col cols="6" sm="3">
+              <v-number-input
+                v-model="settings.group_advance"
+                :label="$t('Tournament.GroupAdvance')"
+                :min="1"
+                :max="16"
+                control-variant="split"
+              />
+            </v-col>
+            <v-col cols="12" sm="6" class="d-flex align-center">
+              <span class="text-body-small text-medium-emphasis">{{ groupSummary }}</span>
+            </v-col>
+          </v-row>
           <v-row density="compact">
             <v-col cols="12" sm="4">
               <v-number-input
@@ -217,7 +240,13 @@ import MapPoolPicker from "@/components/MapPoolPicker.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
 
-const FORMATS: TournamentFormat[] = ["single_elim", "double_elim", "round_robin", "swiss"];
+const FORMATS: TournamentFormat[] = [
+  "single_elim",
+  "double_elim",
+  "round_robin",
+  "swiss",
+  "groups_playoff"
+];
 const BEST_OF = [1, 2, 3, 5, 7].map((n) => ({ value: n, title: `BO${n}` }));
 
 const show = defineModel<boolean>({ default: false });
@@ -246,6 +275,8 @@ const settings = reactive<TournamentSettings>({
   best_of: 1,
   final_best_of: 3,
   swiss_rounds: undefined,
+  group_count: 2,
+  group_advance: 2,
   map_pool: [],
   players_per_team: 5,
   min_players_to_ready: 5,
@@ -283,6 +314,8 @@ watch(show, async (open) => {
     best_of: 1,
     final_best_of: 3,
     swiss_rounds: undefined,
+    group_count: 2,
+    group_advance: 2,
     map_pool: [],
     players_per_team: 5,
     min_players_to_ready: 5,
@@ -329,7 +362,32 @@ const sideTypeItems = computed(() => [
   { value: "always_knife", title: t("CreateMatch.KnifeAlways") }
 ]);
 
-const teamError = computed(() => (draft.team_ids.length < 2 ? t("Tournament.MinTeams") : ""));
+/** Groups + playoff: the same rules as the API (every group plays, the playoff has 2+ teams). */
+const groupError = computed(() => {
+  if (draft.format !== "groups_playoff") return "";
+  const count = draft.team_ids.length;
+  const groups = settings.group_count ?? 1;
+  const advance = settings.group_advance ?? 1;
+  if (count < groups * 2) return t("Tournament.GroupTooSmall");
+  if (advance > Math.floor(count / groups)) {
+    return t("Tournament.AdvanceTooMany", { n: Math.floor(count / groups) });
+  }
+  if (groups * advance < 2) return t("Tournament.PlayoffTooSmall");
+  return "";
+});
+const teamError = computed(() =>
+  draft.team_ids.length < 2 ? t("Tournament.MinTeams") : groupError.value
+);
+/** "2 groups of 3 · top 2 of each → playoff of 4 teams" */
+const groupSummary = computed(() => {
+  const count = draft.team_ids.length;
+  const groups = settings.group_count ?? 1;
+  const advance = settings.group_advance ?? 1;
+  if (!count || groupError.value) return groupError.value;
+  const small = Math.floor(count / groups);
+  const size = count % groups ? `${small}-${small + 1}` : String(small);
+  return t("Tournament.GroupSummary", { groups, size, advance, playoff: groups * advance });
+});
 const mapPoolError = computed(() => {
   if (!settings.map_pool.length) return t("CreateMatch.MapChoiceError");
   if (settings.map_pool.length < Math.max(settings.best_of, settings.final_best_of)) {

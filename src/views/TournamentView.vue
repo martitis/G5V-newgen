@@ -96,6 +96,52 @@
         </v-card>
       </template>
 
+      <template v-else-if="info.format === 'groups_playoff'">
+        <div class="text-title-medium mb-2">{{ $t("Tournament.GroupStage") }}</div>
+        <v-row class="mb-2">
+          <v-col v-for="group in groups" :key="group.group" cols="12" md="6" xl="4">
+            <v-card :title="$t('Tournament.Group', { name: groupLetter(group.group) })">
+              <StandingsTable
+                :standings="group.standings"
+                :teams="detail.teams"
+                :qualify="info.settings.group_advance"
+              />
+              <v-card-text class="d-flex flex-column ga-3">
+                <div v-for="round in group.rounds" :key="round.round">
+                  <div class="text-body-small text-medium-emphasis mb-1">
+                    {{ $t("Tournament.Round", { n: round.round }) }}
+                  </div>
+                  <div class="d-flex flex-wrap ga-3">
+                    <TournamentNodeCard
+                      v-for="node in round.nodes"
+                      :key="node.key"
+                      :node="node"
+                      :teams="detail.teams"
+                      :manageable="manageable"
+                      @create="openCreate"
+                    />
+                  </div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-card :title="$t('Tournament.Playoff')">
+          <v-card-text>
+            <BracketView
+              v-if="playoffNodes.length"
+              :nodes="playoffNodes"
+              :teams="detail.teams"
+              :manageable="manageable"
+              @create="openCreate"
+            />
+            <div v-else class="text-body-medium text-medium-emphasis">
+              {{ $t("Tournament.PlayoffPending", { n: info.settings.group_advance ?? 1 }) }}
+            </div>
+          </v-card-text>
+        </v-card>
+      </template>
+
       <v-row v-else>
         <v-col cols="12" lg="5">
           <v-card :title="$t('Tournament.Standings')">
@@ -193,7 +239,7 @@ import TournamentNodeCard from "@/components/tournament/TournamentNodeCard.vue";
 import TournamentStream from "@/components/tournament/TournamentStream.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
-import { canCreateMatch, roundLabel } from "@/utils/tournament";
+import { canCreateMatch, groupLetter, roundLabel } from "@/utils/tournament";
 
 const STATUS_COLORS = { draft: "grey", running: "success", finished: "secondary" } as const;
 
@@ -248,6 +294,26 @@ const groupRounds = computed(() => {
   }));
 });
 
+/** Groups + playoff: each group's table with its matches by round, and the playoff once it is drawn. */
+const groups = computed(() => {
+  const d = detail.value;
+  if (!d?.groups) return [];
+  return d.groups.map((group) => {
+    const nodes = d.nodes.filter((node) => node.group === group.group);
+    const rounds = [...new Set(nodes.map((node) => node.round))].sort((a, b) => a - b);
+    return {
+      ...group,
+      rounds: rounds.map((round) => ({
+        round,
+        nodes: nodes.filter((node) => node.round === round)
+      }))
+    };
+  });
+});
+const playoffNodes = computed(() =>
+  (detail.value?.nodes ?? []).filter((node) => node.bracket !== "group")
+);
+
 const serverItems = computed(() =>
   freeServers.value.map((server) => ({ value: server.id, title: server.display_name }))
 );
@@ -287,7 +353,13 @@ function matchBody(node: TournamentNode, serverId: number) {
     team1_id: node.team1_id,
     team2_id: node.team2_id,
     tournament_match_id: node.id,
-    title: `${d.tournament.name} · ${roundLabel(node.bracket, node.round, upperRounds, t)}`,
+    title: [
+      d.tournament.name,
+      node.group ? t("Tournament.Group", { name: groupLetter(node.group) }) : null,
+      roundLabel(node.bracket, node.round, upperRounds, t)
+    ]
+      .filter(Boolean)
+      .join(" · "),
     start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
     max_maps: node.best_of,
     veto_mappool: settings.map_pool.join(" "),
