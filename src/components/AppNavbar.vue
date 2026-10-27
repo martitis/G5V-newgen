@@ -63,7 +63,7 @@
       <v-list-subheader>{{ $t("Navbar.SectionStats") }}</v-list-subheader>
       <v-list-item to="/leaderboard" :title="$t('Navbar.Leaderboards')" prepend-icon="mdi-podium" />
       <v-list-item to="/metrics" :title="$t('Navbar.Stats')" prepend-icon="mdi-chart-box" />
-      <template v-if="auth.isSuperAdmin">
+      <template v-if="auth.isAdmin">
         <v-divider class="my-2" />
         <v-list-item to="/admin" :title="$t('Navbar.Admin')" prepend-icon="mdi-shield-crown" />
       </template>

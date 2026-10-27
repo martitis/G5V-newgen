@@ -122,7 +122,7 @@
         v-if="profile.id != null && (isSelf || auth.isAdmin)"
         :user-id="profile.id"
         :title="$t('User.UserMaps', { players: profile.name })"
-        :editable="isSelf"
+        :editable="isSelf && auth.isAdmin"
       />
     </template>
 

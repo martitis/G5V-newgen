@@ -386,11 +386,12 @@ export interface MatchTimeline {
 export interface AdminUser {
   id: number;
   name: string;
-  steam_id: string;
+  /** null for accounts registered without Steam. */
+  steam_id: string | null;
   small_image: string | null;
   admin: number;
   super_admin: number;
-  /** 0 for local accounts whose Steam ID was never proven; they can't be admins. */
+  /** 0 for local accounts; with an unproven Steam ID they can't be admins (without one they can). */
   steam_verified: number;
   /** 1 when the roles come from the config lists (the next Steam login sets them again). */
   roles_from_config: number;

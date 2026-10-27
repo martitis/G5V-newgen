@@ -21,7 +21,7 @@
           clearable
           style="max-width: 280px"
         />
-        <template v-if="auth.loggedIn">
+        <template v-if="auth.isAdmin">
           <v-btn
             color="secondary"
             variant="tonal"
@@ -202,7 +202,7 @@ watch(mine, load);
 onMounted(async () => {
   await load();
   // /teams/create redirects here with ?create=1.
-  if (route.query.create && auth.loggedIn) {
+  if (route.query.create && auth.isAdmin) {
     void router.replace({ query: { ...route.query, create: undefined } });
     void openEditor(null);
   }

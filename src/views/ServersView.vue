@@ -21,10 +21,25 @@
             density="compact"
             hide-details
           />
-          <v-btn color="primary" prepend-icon="mdi-server-plus" @click="openDialog(null)">
-            {{ $t("MyServers.New") }}
-          </v-btn>
         </template>
+        <v-btn
+          v-if="auth.isAdmin"
+          variant="tonal"
+          prepend-icon="mdi-heart-pulse"
+          :loading="checkingAll"
+          :disabled="!servers.length"
+          @click="checkAll"
+        >
+          {{ $t("MyServers.CheckAll") }}
+        </v-btn>
+        <v-btn
+          v-if="auth.isSuperAdmin"
+          color="primary"
+          prepend-icon="mdi-server-plus"
+          @click="openDialog(null)"
+        >
+          {{ $t("MyServers.New") }}
+        </v-btn>
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -86,7 +101,7 @@
           </v-icon>
         </template>
         <template #[`item.rcon`]="{ item }">
-          <template v-if="auth.canEdit(item.user_id)">
+          <template v-if="auth.isSuperAdmin">
             <code v-if="rcon[item.id] !== undefined" class="mr-1">{{ rcon[item.id] }}</code>
             <v-btn
               :icon="rcon[item.id] !== undefined ? 'mdi-eye-off' : 'mdi-eye'"
@@ -100,6 +115,7 @@
         <template #[`item.actions`]="{ item }">
           <div class="d-flex ga-1 justify-end">
             <v-btn
+              v-if="auth.isAdmin"
               size="small"
               variant="tonal"
               :color="statusColor[item.id] ?? 'grey'"
@@ -110,7 +126,7 @@
               {{ $t("MyServers.Status") }}
             </v-btn>
             <v-btn
-              v-if="canPractice(item) && (item.practice_mode || !item.in_use)"
+              v-if="auth.isAdmin && (item.practice_mode || !item.in_use)"
               size="small"
               variant="tonal"
               :color="item.practice_mode ? 'info' : undefined"
@@ -122,7 +138,7 @@
                 item.practice_mode ? $t("MyServers.PracticeStop") : $t("MyServers.PracticeStart")
               }}
             </v-btn>
-            <template v-if="auth.canEdit(item.user_id)">
+            <template v-if="auth.isSuperAdmin">
               <v-btn icon="mdi-pencil" size="small" variant="text" @click="openDialog(item)" />
               <v-btn
                 icon="mdi-delete"
@@ -138,6 +154,35 @@
     </v-card>
 
     <ServerDialog v-model="dialog" :server="editing" @saved="load" />
+
+    <v-dialog v-model="resultsOpen" max-width="640">
+      <v-card :title="$t('MyServers.CheckAllTitle')">
+        <v-card-subtitle v-if="results.length" class="pb-2">
+          {{ $t("MyServers.CheckAllSummary", { ok: resultsOk, total: results.length }) }}
+        </v-card-subtitle>
+        <v-list density="compact">
+          <v-list-item v-for="result in results" :key="result.id">
+            <template #prepend>
+              <v-progress-circular v-if="result.pending" indeterminate size="20" width="2" />
+              <v-icon v-else :color="result.ok ? 'success' : 'error'">
+                {{ result.ok ? "mdi-check-circle" : "mdi-alert-circle" }}
+              </v-icon>
+            </template>
+            <v-list-item-title>{{ result.name }}</v-list-item-title>
+            <v-list-item-subtitle class="text-wrap">
+              {{ result.pending ? $t("MyServers.Checking") : result.message }}
+            </v-list-item-subtitle>
+          </v-list-item>
+        </v-list>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" :loading="checkingAll" @click="checkAll">
+            {{ $t("MyServers.CheckAgain") }}
+          </v-btn>
+          <v-btn color="primary" @click="resultsOpen = false">{{ $t("misc.Close") }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog
       :model-value="toDelete !== null"
@@ -186,9 +231,48 @@ const checking = reactive<Record<number, boolean>>({});
 const statusColor = reactive<Record<number, string>>({});
 const practicing = reactive<Record<number, boolean>>({});
 
-/** Same rule as the API: owner, super admin, or an admin on a public server. */
-const canPractice = (server: Server) =>
-  auth.canEdit(server.user_id) || (Boolean(server.public_server) && auth.isAdmin);
+/** "Check all": every listed server's status (RCON answers, game up to date), shown in a dialog. */
+interface CheckResult {
+  id: number;
+  name: string;
+  pending: boolean;
+  ok: boolean;
+  message: string;
+}
+const results = ref<CheckResult[]>([]);
+const resultsOpen = ref(false);
+const checkingAll = ref(false);
+const resultsOk = computed(() => results.value.filter((result) => result.ok).length);
+async function checkAll() {
+  checkingAll.value = true;
+  resultsOpen.value = true;
+  results.value = servers.value.map((server) => ({
+    id: server.id,
+    name: server.display_name,
+    pending: true,
+    ok: false,
+    message: ""
+  }));
+  await Promise.all(
+    results.value.map(async (result, index) => {
+      let entry: CheckResult;
+      try {
+        const reply = await serversApi.status(result.id);
+        entry = { ...result, pending: false, ok: true, message: reply.message };
+      } catch (error) {
+        entry = {
+          ...result,
+          pending: false,
+          ok: false,
+          message: error instanceof Error ? error.message : String(error)
+        };
+      }
+      results.value[index] = entry;
+      statusColor[result.id] = entry.ok ? "success" : "error";
+    })
+  );
+  checkingAll.value = false;
+}
 
 const headers = computed(() => [
   { title: t("MyServers.ID"), key: "id" },

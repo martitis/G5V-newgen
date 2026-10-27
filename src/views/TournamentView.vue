@@ -217,10 +217,7 @@ const createServer = ref<number | null>(null);
 const freeServers = ref<Server[]>([]);
 
 const info = computed(() => detail.value!.tournament);
-const manageable = computed(
-  () =>
-    detail.value != null && (auth.isSuperAdmin || auth.user?.id === detail.value.tournament.user_id)
-);
+const manageable = computed(() => detail.value != null && auth.isAdmin);
 const isElimination = computed(() => ["single_elim", "double_elim"].includes(info.value.format));
 const statusLabel = computed(
   () =>

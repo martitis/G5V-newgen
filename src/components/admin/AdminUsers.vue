@@ -46,7 +46,7 @@
       <template #[`item.steam_id`]="{ item }">
         <span>{{ item.steam_id }}</span>
         <v-chip
-          v-if="!item.steam_verified"
+          v-if="item.steam_id && !item.steam_verified"
           size="x-small"
           color="warning"
           variant="tonal"
@@ -62,7 +62,11 @@
           <v-select
             :model-value="roleOf(item)"
             :items="roleItems"
-            :disabled="!item.steam_verified || savingId === item.id"
+            :disabled="
+              (item.steam_id && !item.steam_verified) ||
+              (!auth.isSuperAdmin && Number(item.super_admin) > 0) ||
+              savingId === item.id
+            "
             :loading="savingId === item.id"
             density="compact"
             variant="outlined"
@@ -114,10 +118,15 @@ const headers = computed(() => [
   { title: t("Admin.Role"), key: "role", sortable: false },
   { title: t("Admin.Counts"), key: "counts", sortable: false, align: "end" as const }
 ]);
+// Only super admins hand out the super admin role (the API refuses it from admins).
 const roleItems = computed(() => [
   { value: "user", title: t("Admin.RoleUser") },
   { value: "admin", title: t("Admin.RoleAdmin") },
-  { value: "super_admin", title: t("Admin.RoleSuperAdmin") }
+  {
+    value: "super_admin",
+    title: t("Admin.RoleSuperAdmin"),
+    props: { disabled: !auth.isSuperAdmin }
+  }
 ]);
 
 const roleOf = (user: AdminUser): Role =>

@@ -20,11 +20,11 @@
       "Stats": "Panel stats"
     },
     "Login": {
-      "SteamIdHint": "SteamID64 (7656…) or your profile link, e.g. steamcommunity.com/id/yourname",
+      "SteamIdHint": "SteamID64 (7656…) or your profile link, so your match stats show on your profile. You can leave it empty.",
       "title": "Sign in",
       "Login": "Sign in",
       "Register": "Create account",
-      "SteamIdLabel": "Your Steam account",
+      "SteamIdLabel": "Your Steam account (optional)",
       "UsernameLabel": "Username",
       "PasswordLabel": "Password",
       "OldPasswordLabel": "Old Password",
@@ -38,7 +38,7 @@
       "PasswordHint": "At least {n} characters",
       "RepeatPassword": "Repeat password",
       "PasswordsDiffer": "The passwords don't match",
-      "AdminNote": "A panel account can't be an admin until you've signed in with Steam once."
+      "AdminNote": "New accounts can look at everything; admins create and change matches, teams and servers."
     },
     "MatchAdmin": {
       "UpdateCallbacks": "Send panel address to server",
@@ -314,7 +314,12 @@
       "AgoMinutes": "{n} min ago",
       "AgoHours": "{n} h ago",
       "AgoDays": "{n} d ago",
-      "OnlineSince": "Online · {ago}"
+      "OnlineSince": "Online · {ago}",
+      "CheckAll": "Check all",
+      "CheckAllTitle": "Server status",
+      "CheckAllSummary": "{ok} of {total} servers OK",
+      "Checking": "Checking…",
+      "CheckAgain": "Check again"
     },
     "ServerCreate": {
       "FormJoinPassword": "Join password (optional)",
@@ -472,7 +477,7 @@
       "FromConfig": "From config",
       "FromConfigHint": "Set by admins/super_admins.steam_ids in the API config; the next Steam login sets it again.",
       "Unverified": "Steam not verified",
-      "UnverifiedHint": "Local account that never signed in with Steam; it can't be an admin.",
+      "UnverifiedHint": "Local account with a Steam ID that was never confirmed by a Steam login; it can't be an admin.",
       "LocalLogin": "Local login",
       "Counts": "Matches / teams / servers",
       "RoleSaved": "Role saved.",
@@ -618,8 +623,6 @@
       "ToggleKnife": "Knife round on/off",
       "TogglePlayout": "Playout on/off",
       "ToggleWhitelist": "Whitelist on/off",
-      "ReadyRequired": "Players needed to ready (0 = everyone)",
-      "AddReadyTime": "Add ready time",
       "ChangeMap": "Change map",
       "TeamNames": "Team names",
       "Rename": "Rename",
@@ -724,11 +727,11 @@
       "Stats": "Statistiques du panneau"
     },
     "Login": {
-      "SteamIdHint": "SteamID64 (7656…) ou le lien de votre profil, par ex. steamcommunity.com/id/votrenom",
+      "SteamIdHint": "SteamID64 (7656…) ou le lien de votre profil, pour voir vos statistiques sur votre profil. Vous pouvez le laisser vide.",
       "title": "Connexion",
       "Login": "Se connecter",
       "Register": "Créer un compte",
-      "SteamIdLabel": "Votre compte Steam",
+      "SteamIdLabel": "Votre compte Steam (facultatif)",
       "UsernameLabel": "Nom d'utilisateur",
       "PasswordLabel": "Mot de passe",
       "OldPasswordLabel": "Ancien mot de passe",
@@ -742,7 +745,7 @@
       "PasswordHint": "Au moins {n} caractères",
       "RepeatPassword": "Répéter le mot de passe",
       "PasswordsDiffer": "Les mots de passe ne correspondent pas",
-      "AdminNote": "Un compte du panel ne peut pas être admin avant une première connexion Steam."
+      "AdminNote": "Les nouveaux comptes peuvent tout consulter ; les admins créent et modifient matchs, équipes et serveurs."
     },
     "MatchAdmin": {
       "UpdateCallbacks": "Envoyer l'adresse du panneau au serveur",
@@ -1018,7 +1021,12 @@
       "AgoMinutes": "il y a {n} min",
       "AgoHours": "il y a {n} h",
       "AgoDays": "il y a {n} j",
-      "OnlineSince": "En ligne · {ago}"
+      "OnlineSince": "En ligne · {ago}",
+      "CheckAll": "Tout vérifier",
+      "CheckAllTitle": "État des serveurs",
+      "CheckAllSummary": "{ok} serveurs sur {total} OK",
+      "Checking": "Vérification…",
+      "CheckAgain": "Vérifier à nouveau"
     },
     "ServerCreate": {
       "FormJoinPassword": "Mot de passe du serveur (facultatif)",
@@ -1176,7 +1184,7 @@
       "FromConfig": "Depuis la config",
       "FromConfigHint": "Défini par admins/super_admins.steam_ids dans la config de l'API ; la prochaine connexion Steam le rétablit.",
       "Unverified": "Steam non vérifié",
-      "UnverifiedHint": "Compte local jamais connecté via Steam ; il ne peut pas être admin.",
+      "UnverifiedHint": "Compte local dont le Steam ID n'a jamais été confirmé par une connexion Steam ; il ne peut pas être admin.",
       "LocalLogin": "Connexion locale",
       "Counts": "Matchs / équipes / serveurs",
       "RoleSaved": "Rôle enregistré.",
@@ -1322,8 +1330,6 @@
       "ToggleKnife": "Manche au couteau oui/non",
       "TogglePlayout": "Jouer toutes les manches oui/non",
       "ToggleWhitelist": "Liste blanche oui/non",
-      "ReadyRequired": "Joueurs prêts requis (0 = tous)",
-      "AddReadyTime": "Ajouter du temps",
       "ChangeMap": "Changer de carte",
       "TeamNames": "Noms des équipes",
       "Rename": "Renommer",
@@ -1428,11 +1434,11 @@
       "Stats": "パネル統計"
     },
     "Login": {
-      "SteamIdHint": "SteamID64（7656…）またはプロフィールのリンク（例: steamcommunity.com/id/yourname）",
+      "SteamIdHint": "SteamID64（7656…）またはプロフィールのリンク。入力すると試合の統計がプロフィールに表示されます。空欄でも構いません。",
       "title": "サインイン",
       "Login": "サインイン",
       "Register": "アカウント作成",
-      "SteamIdLabel": "あなたの Steam アカウント",
+      "SteamIdLabel": "あなたの Steam アカウント（任意）",
       "UsernameLabel": "ユーザー名",
       "PasswordLabel": "パスワード",
       "OldPasswordLabel": "旧パスワード",
@@ -1446,7 +1452,7 @@
       "PasswordHint": "{n} 文字以上",
       "RepeatPassword": "パスワード（確認）",
       "PasswordsDiffer": "パスワードが一致しません",
-      "AdminNote": "パネルのアカウントは、一度 Steam でサインインするまで管理者になれません。"
+      "AdminNote": "新しいアカウントはすべて閲覧できます。試合・チーム・サーバーの作成と変更は管理者が行います。"
     },
     "MatchAdmin": {
       "UpdateCallbacks": "パネルのアドレスをサーバーに送信",
@@ -1722,7 +1728,12 @@
       "AgoMinutes": "{n} 分前",
       "AgoHours": "{n} 時間前",
       "AgoDays": "{n} 日前",
-      "OnlineSince": "オンライン・{ago}"
+      "OnlineSince": "オンライン・{ago}",
+      "CheckAll": "すべて確認",
+      "CheckAllTitle": "サーバーの状態",
+      "CheckAllSummary": "{total} 台中 {ok} 台が正常",
+      "Checking": "確認中…",
+      "CheckAgain": "再確認"
     },
     "ServerCreate": {
       "FormJoinPassword": "参加パスワード（任意）",
@@ -1880,7 +1891,7 @@
       "FromConfig": "設定から",
       "FromConfigHint": "APIの設定（admins/super_admins.steam_ids）で設定されています。次回のSteamログインで再設定されます。",
       "Unverified": "Steam未確認",
-      "UnverifiedHint": "Steamでログインしたことのないローカルアカウントです。管理者にはできません。",
+      "UnverifiedHint": "Steam でのサインインで確認されていない Steam ID を持つローカルアカウントは管理者にできません。",
       "LocalLogin": "ローカルログイン",
       "Counts": "試合 / チーム / サーバー",
       "RoleSaved": "役割を保存しました。",
@@ -2026,8 +2037,6 @@
       "ToggleKnife": "ナイフラウンド切替",
       "TogglePlayout": "全ラウンドプレイ切替",
       "ToggleWhitelist": "ホワイトリスト切替",
-      "ReadyRequired": "準備完了に必要な人数（0＝全員）",
-      "AddReadyTime": "準備時間を追加",
       "ChangeMap": "マップ変更",
       "TeamNames": "チーム名",
       "Rename": "名前を変更",

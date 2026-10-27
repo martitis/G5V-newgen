@@ -78,7 +78,6 @@
               :hint="$t('Login.SteamIdHint')"
               persistent-hint
               prepend-inner-icon="mdi-steam"
-              :rules="[required]"
               class="mb-3"
               autofocus
             />
