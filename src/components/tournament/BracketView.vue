@@ -11,6 +11,8 @@
             <TournamentNodeCard
               v-for="node in column.nodes"
               :key="node.key"
+              :class="{ 'node-hidden': isPlaceholder(node) }"
+              :aria-hidden="isPlaceholder(node) || undefined"
               :node="node"
               :teams="teams"
               :manageable="manageable"
@@ -38,6 +40,12 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{ create: [node: TournamentNode] }>();
 const { t } = useI18n();
+
+/**
+ * A bye (one team, no opponent) or an empty slot is never played: the team simply shows up in the next round.
+ * It keeps its place, invisibly, so the rounds still line up.
+ */
+const isPlaceholder = (node: TournamentNode) => node.status === "bye" || node.status === "empty";
 
 const sections = computed(() => {
   const upperRounds = Math.max(
@@ -80,6 +88,9 @@ const sections = computed(() => {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+}
+.node-hidden {
+  visibility: hidden;
 }
 .round-title {
   white-space: nowrap;
