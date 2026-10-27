@@ -22,6 +22,15 @@
       <span v-else class="text-medium-emphasis">BO{{ node.best_of }}</span>
       <v-spacer />
       <v-btn
+        v-if="node.status === 'live' && node.server_id && auth.loggedIn"
+        icon="mdi-content-copy"
+        size="x-small"
+        variant="text"
+        :loading="copying"
+        :title="$t('Match.CopyConnect')"
+        @click="copyConnect"
+      />
+      <v-btn
         v-if="node.match_id"
         :to="`/match/${node.match_id}`"
         size="x-small"
@@ -45,9 +54,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { servers } from "@/api";
 import type { TournamentDetail, TournamentNode } from "@/api/types";
 import TeamLogo from "@/components/TeamLogo.vue";
+import { useAuthStore } from "@/stores/auth";
+import { useUiStore } from "@/stores/ui";
+import { copyText } from "@/utils/clipboard";
+import { connectLinks } from "@/utils/format";
 import { canCreateMatch } from "@/utils/tournament";
 
 const props = defineProps<{
@@ -57,6 +72,35 @@ const props = defineProps<{
   manageable: boolean;
 }>();
 const emit = defineEmits<{ create: [node: TournamentNode] }>();
+const { t } = useI18n();
+const auth = useAuthStore();
+const ui = useUiStore();
+
+/** Copies the live match's connect command; the API only gives the address to admins and the match's players. */
+const copying = ref(false);
+async function copyConnect() {
+  if (!props.node.server_id) return;
+  copying.value = true;
+  try {
+    const server = await servers.get(props.node.server_id);
+    if (!server.ip_string) {
+      ui.notify(t("Tournament.NoConnect"), "warning");
+      return;
+    }
+    const { command } = connectLinks(
+      server.ip_string,
+      server.port,
+      server.gotv_port,
+      server.join_password
+    );
+    if (await copyText(command)) ui.notify(t("Match.Copied"), "success");
+    else ui.notify(t("misc.CopyFailed"), "warning");
+  } catch (error) {
+    ui.notifyError(error);
+  } finally {
+    copying.value = false;
+  }
+}
 
 const slots = computed(() =>
   ([1, 2] as const).map((side) => {

@@ -564,7 +564,8 @@
       "GroupStage": "Group stage",
       "Group": "Group {name}",
       "Playoff": "Playoff",
-      "PlayoffPending": "The playoff is drawn when every group match is played: the top {n} of each group go through."
+      "PlayoffPending": "The playoff is drawn when every group match is played: the top {n} of each group go through.",
+      "NoConnect": "You can't see this server's address."
     },
     "Pug": {
       "TeamMode": "Team mode",
@@ -1283,7 +1284,8 @@
       "GroupStage": "Phase de groupes",
       "Group": "Groupe {name}",
       "Playoff": "Phase finale",
-      "PlayoffPending": "La phase finale est tirée quand tous les matchs de groupe sont joués : les {n} premiers de chaque groupe se qualifient."
+      "PlayoffPending": "La phase finale est tirée quand tous les matchs de groupe sont joués : les {n} premiers de chaque groupe se qualifient.",
+      "NoConnect": "Vous ne pouvez pas voir l'adresse de ce serveur."
     },
     "Pug": {
       "TeamMode": "Mode d'équipe",
@@ -2002,7 +2004,8 @@
       "GroupStage": "グループステージ",
       "Group": "グループ {name}",
       "Playoff": "プレーオフ",
-      "PlayoffPending": "グループ戦がすべて終わるとプレーオフが組まれます。各グループの上位 {n} チームが進出します。"
+      "PlayoffPending": "グループ戦がすべて終わるとプレーオフが組まれます。各グループの上位 {n} チームが進出します。",
+      "NoConnect": "このサーバーのアドレスは表示できません。"
     },
     "Pug": {
       "TeamMode": "チームモード",

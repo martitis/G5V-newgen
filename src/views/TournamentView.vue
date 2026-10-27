@@ -239,7 +239,7 @@ import TournamentNodeCard from "@/components/tournament/TournamentNodeCard.vue";
 import TournamentStream from "@/components/tournament/TournamentStream.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
-import { canCreateMatch, groupLetter, roundLabel } from "@/utils/tournament";
+import { groupLetter, roundLabel, startableNodes } from "@/utils/tournament";
 
 const STATUS_COLORS = { draft: "grey", running: "success", finished: "secondary" } as const;
 
@@ -410,7 +410,7 @@ async function createOne() {
 
 /** Every ready slot without a match goes onto the next free server. */
 async function startReady() {
-  const ready = (detail.value?.nodes ?? []).filter(canCreateMatch);
+  const ready = startableNodes(detail.value?.nodes ?? []);
   if (!ready.length) {
     ui.notify(t("Tournament.NothingReady"), "info");
     return;

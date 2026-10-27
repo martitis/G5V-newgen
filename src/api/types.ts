@@ -461,6 +461,8 @@ export interface TournamentNode {
   winner_id: number | null;
   status: "pending" | "ready" | "live" | "done" | "bye" | "empty";
   match_id: number | null;
+  /** Server of the linked match (its address comes from GET /servers/:id, for those allowed to see it). */
+  server_id?: number | null;
   best_of: number;
   /** Series score of the linked match, in the node's team order. */
   score: [number, number] | null;

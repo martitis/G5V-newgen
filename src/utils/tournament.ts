@@ -24,6 +24,32 @@ export function roundLabel(
 /** "A", "B", ... for group 1, 2, ... */
 export const groupLetter = (group: number) => String.fromCharCode(64 + group);
 
+/**
+ * The ready slots that can start together: earliest rounds first, and no team twice, nor a team still playing
+ * another match of the tournament (round robin and group slots are all ready at once).
+ */
+export function startableNodes(nodes: TournamentNode[]): TournamentNode[] {
+  const busy = new Set<number>();
+  for (const node of nodes) {
+    if (node.status !== "live") continue;
+    if (node.team1_id != null) busy.add(node.team1_id);
+    if (node.team2_id != null) busy.add(node.team2_id);
+  }
+  const picked: TournamentNode[] = [];
+  const ready = nodes
+    .filter(canCreateMatch)
+    .sort(
+      (a, b) => a.round - b.round || (a.group ?? 0) - (b.group ?? 0) || a.position - b.position
+    );
+  for (const node of ready) {
+    if (busy.has(node.team1_id!) || busy.has(node.team2_id!)) continue;
+    busy.add(node.team1_id!);
+    busy.add(node.team2_id!);
+    picked.push(node);
+  }
+  return picked;
+}
+
 /** A slot can get a match: both teams known, none linked (a cancelled one is unlinked by the API). */
 export const canCreateMatch = (node: TournamentNode) =>
   node.status === "ready" &&
