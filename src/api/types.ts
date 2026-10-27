@@ -416,12 +416,16 @@ export interface AuditEntry {
   detail: string | null;
 }
 
-export type TournamentFormat = "single_elim" | "double_elim" | "round_robin" | "swiss";
+export type TournamentFormat =
+  "single_elim" | "double_elim" | "round_robin" | "swiss" | "groups_playoff";
 
 export interface TournamentSettings {
   best_of: number;
   final_best_of: number;
   swiss_rounds?: number;
+  /** Groups + playoff: number of round robin groups, and teams of each that go to the playoff. */
+  group_count?: number;
+  group_advance?: number;
   map_pool: string[];
   players_per_team: number;
   min_players_to_ready: number;
@@ -446,7 +450,9 @@ export interface TournamentSummary {
 export interface TournamentNode {
   id: number;
   key: string;
-  bracket: "upper" | "lower" | "grand_final" | "round_robin" | "swiss";
+  bracket: "upper" | "lower" | "grand_final" | "round_robin" | "swiss" | "group";
+  /** Groups + playoff: the group (1 = A) of a group stage node. */
+  group?: number | null;
   round: number;
   position: number;
   final: boolean;
@@ -455,6 +461,8 @@ export interface TournamentNode {
   winner_id: number | null;
   status: "pending" | "ready" | "live" | "done" | "bye" | "empty";
   match_id: number | null;
+  /** Server of the linked match (its address comes from GET /servers/:id, for those allowed to see it). */
+  server_id?: number | null;
   best_of: number;
   /** Series score of the linked match, in the node's team order. */
   score: [number, number] | null;
@@ -482,6 +490,8 @@ export interface TournamentDetail {
   }[];
   nodes: TournamentNode[];
   standings: TournamentStanding[] | null;
+  /** Groups + playoff: each group's table. */
+  groups?: { group: number; standings: TournamentStanding[] }[] | null;
 }
 
 export type PugFormation = "random" | "balanced" | "captains";

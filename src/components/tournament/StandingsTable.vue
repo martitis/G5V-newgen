@@ -11,7 +11,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(row, index) in standings" :key="row.team_id">
+      <tr
+        v-for="(row, index) in standings"
+        :key="row.team_id"
+        :class="{ qualified: qualify != null && index < qualify }"
+      >
         <td>{{ index + 1 }}</td>
         <td>
           <div class="d-flex align-center ga-2">
@@ -39,6 +43,8 @@ const props = defineProps<{
   teams: TournamentDetail["teams"];
   /** Swiss shows the Buchholz tiebreak. */
   buchholz?: boolean;
+  /** Groups: the top rows that go to the playoff are marked. */
+  qualify?: number;
 }>();
 
 const teamOf = (id: number) => props.teams.find((team) => team.id === id);
@@ -47,3 +53,9 @@ const diff = (row: TournamentStanding) => {
   return value > 0 ? `+${value}` : String(value);
 };
 </script>
+
+<style scoped>
+.qualified td:first-child {
+  box-shadow: inset 3px 0 rgb(var(--v-theme-success));
+}
+</style>
