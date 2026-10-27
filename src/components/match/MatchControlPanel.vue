@@ -244,6 +244,7 @@
                   {{ $t("MatchAdmin.UpdateCallbacks") }}
                 </v-btn>
                 <v-btn
+                  v-if="auth.isSuperAdmin"
                   size="small"
                   variant="tonal"
                   prepend-icon="mdi-console"
@@ -411,6 +412,7 @@ import { computed, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { matches } from "@/api";
 import type { Match, StatusPlayer } from "@/api/types";
+import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
 import { mapDisplayName } from "@/utils/format";
 import MatchAdminDialogs from "@/components/match/MatchAdminDialogs.vue";
@@ -437,6 +439,7 @@ const props = defineProps<{ match: Match }>();
 const emit = defineEmits<{ changed: [] }>();
 
 const { t } = useI18n();
+const auth = useAuthStore();
 const ui = useUiStore();
 // Collapsed by default; admins open it when they need it.
 const openPanels = ref<string[]>([]);

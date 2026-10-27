@@ -214,9 +214,7 @@ const busy = ref(false);
 const now = ref(Date.now());
 
 const me = computed(() => data.value?.players.find((player) => player.user_id === auth.user?.id));
-const owner = computed(
-  () => data.value != null && (auth.isSuperAdmin || data.value.queue.user_id === auth.user?.id)
-);
+const owner = computed(() => data.value != null && auth.isAdmin);
 const formed = computed(() =>
   ["picking", "loading", "loaded", "failed"].includes(data.value?.queue.status ?? "")
 );

@@ -314,7 +314,12 @@
       "AgoMinutes": "{n} min ago",
       "AgoHours": "{n} h ago",
       "AgoDays": "{n} d ago",
-      "OnlineSince": "Online · {ago}"
+      "OnlineSince": "Online · {ago}",
+      "CheckAll": "Check all",
+      "CheckAllTitle": "Server status",
+      "CheckAllSummary": "{ok} of {total} servers OK",
+      "Checking": "Checking…",
+      "CheckAgain": "Check again"
     },
     "ServerCreate": {
       "FormJoinPassword": "Join password (optional)",
@@ -1016,7 +1021,12 @@
       "AgoMinutes": "il y a {n} min",
       "AgoHours": "il y a {n} h",
       "AgoDays": "il y a {n} j",
-      "OnlineSince": "En ligne · {ago}"
+      "OnlineSince": "En ligne · {ago}",
+      "CheckAll": "Tout vérifier",
+      "CheckAllTitle": "État des serveurs",
+      "CheckAllSummary": "{ok} serveurs sur {total} OK",
+      "Checking": "Vérification…",
+      "CheckAgain": "Vérifier à nouveau"
     },
     "ServerCreate": {
       "FormJoinPassword": "Mot de passe du serveur (facultatif)",
@@ -1718,7 +1728,12 @@
       "AgoMinutes": "{n} 分前",
       "AgoHours": "{n} 時間前",
       "AgoDays": "{n} 日前",
-      "OnlineSince": "オンライン・{ago}"
+      "OnlineSince": "オンライン・{ago}",
+      "CheckAll": "すべて確認",
+      "CheckAllTitle": "サーバーの状態",
+      "CheckAllSummary": "{total} 台中 {ok} 台が正常",
+      "Checking": "確認中…",
+      "CheckAgain": "再確認"
     },
     "ServerCreate": {
       "FormJoinPassword": "参加パスワード（任意）",

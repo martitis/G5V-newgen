@@ -46,9 +46,13 @@ export const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  /** May change something: an admin who owns it, or a super admin (other users only read). */
-  function canEdit(ownerId: number | null | undefined) {
-    return isAdmin.value && (isSuperAdmin.value || (ownerId != null && ownerId === user.value?.id));
+  /**
+   * May change something: any admin (game servers are the exception, managed by super admins only; the servers
+   * page checks isSuperAdmin). Other users only read. The owner argument is kept for the callers.
+   */
+  function canEdit(ownerId?: number | null) {
+    void ownerId;
+    return isAdmin.value;
   }
 
   return {
