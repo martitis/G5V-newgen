@@ -7,11 +7,13 @@
       :class="{ 'slot--won': slot.won, 'slot--lost': slot.lost }"
     >
       <TeamLogo :logo="slot.team?.logo" :size="18" />
-      <span class="slot-name">
-        {{
-          slot.team?.name ??
-          (node.status === "bye" && !slot.team ? $t("Tournament.Bye") : $t("Tournament.TBD"))
-        }}
+      <span v-if="slot.team" class="slot-name">{{ slot.team.name }}</span>
+      <span v-else-if="node.status === 'bye'" class="slot-name text-medium-emphasis">
+        {{ $t("Tournament.Bye") }}
+      </span>
+      <!-- Decided by an earlier match that isn't played yet. -->
+      <span v-else class="slot-name slot-waiting text-medium-emphasis">
+        {{ $t("Tournament.Waiting") }}<span class="dots" aria-hidden="true" />
       </span>
       <span v-if="node.score" class="slot-score">{{ slot.score }}</span>
     </div>
@@ -144,6 +146,36 @@ const slots = computed(() =>
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.slot-waiting {
+  font-style: italic;
+}
+.dots::after {
+  content: "";
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: dots 1.4s steps(4, end) infinite;
+}
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dots::after {
+    animation: none;
+    content: "...";
+  }
 }
 .slot-score {
   font-weight: 700;
