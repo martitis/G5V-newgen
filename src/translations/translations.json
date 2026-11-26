@@ -115,7 +115,9 @@
       "StartTime": "Start:",
       "EndTime": "End:",
       "Connect": "Connect!",
-      "GOTVConnect": "Connect to GOTV!"
+      "GOTVConnect": "Connect to GOTV!",
+      "DemoArchived": "Demo archived",
+      "DemoArchivedHint": "The demo was moved to the server archive. An admin can restore it on the game server."
     },
     "CreateMatch": {
       "ClearMaps": "Clear",
@@ -867,7 +869,9 @@
       "StartTime": "Début : ",
       "EndTime": "Fin : ",
       "Connect": "Connexion !",
-      "GOTVConnect": "Connexion à la GOTV!"
+      "GOTVConnect": "Connexion à la GOTV!",
+      "DemoArchived": "Démo archivée",
+      "DemoArchivedHint": "La démo a été déplacée dans l'archive du serveur. Un admin peut la restaurer sur le serveur de jeu."
     },
     "CreateMatch": {
       "ClearMaps": "Effacer",
@@ -1619,7 +1623,9 @@
       "StartTime": "スタート:",
       "EndTime": "終り:",
       "Connect": "つなげろ！",
-      "GOTVConnect": "GOTVに接続"
+      "GOTVConnect": "GOTVに接続",
+      "DemoArchived": "デモはアーカイブ済み",
+      "DemoArchivedHint": "デモはサーバーのアーカイブに移動されました。管理者がゲームサーバー上で復元できます。"
     },
     "CreateMatch": {
       "ClearMaps": "クリア",
