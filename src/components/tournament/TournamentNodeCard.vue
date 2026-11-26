@@ -15,6 +15,16 @@
       <span v-else class="slot-name slot-waiting text-medium-emphasis">
         {{ $t("Tournament.Waiting") }}<span class="dots" aria-hidden="true" />
       </span>
+      <v-chip
+        v-if="slot.team?.disqualified"
+        color="error"
+        size="x-small"
+        variant="tonal"
+        label
+        :title="$t('Tournament.DisqualifiedTitle')"
+      >
+        {{ $t("Tournament.DQ") }}
+      </v-chip>
       <span v-if="node.score" class="slot-score">{{ slot.score }}</span>
     </div>
     <div class="node-footer text-caption">
@@ -22,7 +32,22 @@
         {{ $t("Matches.StatusLive") }}
       </v-chip>
       <span v-else class="text-medium-emphasis">BO{{ node.best_of }}</span>
+      <v-icon
+        v-if="node.manual"
+        icon="mdi-hand-back-right-outline"
+        size="x-small"
+        class="ml-1 text-medium-emphasis"
+        :title="$t('Tournament.ManualSlot')"
+      />
       <v-spacer />
+      <v-btn
+        v-if="manageable"
+        icon="mdi-pencil"
+        size="x-small"
+        variant="text"
+        :title="$t('Tournament.EditSlot')"
+        @click="emit('edit', node)"
+      />
       <v-btn
         v-if="node.status === 'live' && node.server_id && auth.loggedIn"
         icon="mdi-content-copy"
@@ -73,7 +98,7 @@ const props = defineProps<{
   /** The viewer may create matches (owner or super admin). */
   manageable: boolean;
 }>();
-const emit = defineEmits<{ create: [node: TournamentNode] }>();
+const emit = defineEmits<{ create: [node: TournamentNode]; edit: [node: TournamentNode] }>();
 const { t } = useI18n();
 const auth = useAuthStore();
 const ui = useUiStore();

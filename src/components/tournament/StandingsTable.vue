@@ -14,7 +14,9 @@
       <tr
         v-for="(row, index) in standings"
         :key="row.team_id"
-        :class="{ qualified: qualify != null && index < qualify }"
+        :class="{
+          qualified: qualify != null && index < qualify && !teamOf(row.team_id)?.disqualified
+        }"
       >
         <td>{{ index + 1 }}</td>
         <td>
@@ -23,6 +25,16 @@
             <router-link :to="`/teams/${row.team_id}`" class="app-link">
               {{ teamOf(row.team_id)?.name ?? `#${row.team_id}` }}
             </router-link>
+            <v-chip
+              v-if="teamOf(row.team_id)?.disqualified"
+              color="error"
+              size="x-small"
+              variant="tonal"
+              label
+              :title="$t('Tournament.DisqualifiedTitle')"
+            >
+              {{ $t("Tournament.DQ") }}
+            </v-chip>
           </div>
         </td>
         <td class="text-right font-weight-medium">{{ row.wins }}</td>
