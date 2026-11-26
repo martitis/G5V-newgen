@@ -17,6 +17,7 @@
               :teams="teams"
               :manageable="manageable"
               @create="(n) => emit('create', n)"
+              @edit="(n) => emit('edit', n)"
             />
           </div>
         </div>
@@ -38,7 +39,7 @@ const props = defineProps<{
   teams: TournamentDetail["teams"];
   manageable: boolean;
 }>();
-const emit = defineEmits<{ create: [node: TournamentNode] }>();
+const emit = defineEmits<{ create: [node: TournamentNode]; edit: [node: TournamentNode] }>();
 const { t } = useI18n();
 
 /**

@@ -41,6 +41,18 @@
           >
             {{ $t("Match.DemoFailed") }}
           </v-chip>
+          <!-- The demo was removed from the game servers' folder (cs2manager.sh archive). -->
+          <v-chip
+            v-else-if="mapStat?.demo_status === 'archived'"
+            size="small"
+            variant="outlined"
+            color="white"
+            prepend-icon="mdi-archive"
+            :title="$t('Match.DemoArchivedHint')"
+            label
+          >
+            {{ $t("Match.DemoArchived") }}
+          </v-chip>
           <v-chip
             v-else-if="mapStat?.end_time"
             size="small"

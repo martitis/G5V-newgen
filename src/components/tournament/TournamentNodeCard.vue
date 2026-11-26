@@ -7,12 +7,24 @@
       :class="{ 'slot--won': slot.won, 'slot--lost': slot.lost }"
     >
       <TeamLogo :logo="slot.team?.logo" :size="18" />
-      <span class="slot-name">
-        {{
-          slot.team?.name ??
-          (node.status === "bye" && !slot.team ? $t("Tournament.Bye") : $t("Tournament.TBD"))
-        }}
+      <span v-if="slot.team" class="slot-name">{{ slot.team.name }}</span>
+      <span v-else-if="node.status === 'bye'" class="slot-name text-medium-emphasis">
+        {{ $t("Tournament.Bye") }}
       </span>
+      <!-- Decided by an earlier match that isn't played yet. -->
+      <span v-else class="slot-name slot-waiting text-medium-emphasis">
+        {{ $t("Tournament.Waiting") }}<span class="dots" aria-hidden="true" />
+      </span>
+      <v-chip
+        v-if="slot.team?.disqualified"
+        color="error"
+        size="x-small"
+        variant="tonal"
+        label
+        :title="$t('Tournament.DisqualifiedTitle')"
+      >
+        {{ $t("Tournament.DQ") }}
+      </v-chip>
       <span v-if="node.score" class="slot-score">{{ slot.score }}</span>
     </div>
     <div class="node-footer text-caption">
@@ -20,7 +32,22 @@
         {{ $t("Matches.StatusLive") }}
       </v-chip>
       <span v-else class="text-medium-emphasis">BO{{ node.best_of }}</span>
+      <v-icon
+        v-if="node.manual"
+        icon="mdi-hand-back-right-outline"
+        size="x-small"
+        class="ml-1 text-medium-emphasis"
+        :title="$t('Tournament.ManualSlot')"
+      />
       <v-spacer />
+      <v-btn
+        v-if="manageable"
+        icon="mdi-pencil"
+        size="x-small"
+        variant="text"
+        :title="$t('Tournament.EditSlot')"
+        @click="emit('edit', node)"
+      />
       <v-btn
         v-if="node.status === 'live' && node.server_id && auth.loggedIn"
         icon="mdi-content-copy"
@@ -71,7 +98,7 @@ const props = defineProps<{
   /** The viewer may create matches (owner or super admin). */
   manageable: boolean;
 }>();
-const emit = defineEmits<{ create: [node: TournamentNode] }>();
+const emit = defineEmits<{ create: [node: TournamentNode]; edit: [node: TournamentNode] }>();
 const { t } = useI18n();
 const auth = useAuthStore();
 const ui = useUiStore();
@@ -144,6 +171,36 @@ const slots = computed(() =>
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.slot-waiting {
+  font-style: italic;
+}
+.dots::after {
+  content: "";
+  display: inline-block;
+  width: 1.2em;
+  text-align: left;
+  animation: dots 1.4s steps(4, end) infinite;
+}
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dots::after {
+    animation: none;
+    content: "...";
+  }
 }
 .slot-score {
   font-weight: 700;

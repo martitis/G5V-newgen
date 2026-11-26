@@ -57,6 +57,14 @@
             >
               {{ $t("Tournament.StartReady") }}
             </v-btn>
+            <v-btn
+              v-if="info.status !== 'draft'"
+              variant="tonal"
+              prepend-icon="mdi-account-cancel"
+              @click="teamsOpen = true"
+            >
+              {{ $t("Tournament.ManageTeams") }}
+            </v-btn>
             <v-btn variant="tonal" prepend-icon="mdi-pencil" @click="editOpen = true">{{
               $t("Tournament.Edit")
             }}</v-btn>
@@ -91,6 +99,7 @@
               :teams="detail.teams"
               :manageable="manageable"
               @create="openCreate"
+              @edit="openEdit"
             />
           </v-card-text>
         </v-card>
@@ -119,6 +128,7 @@
                       :teams="detail.teams"
                       :manageable="manageable"
                       @create="openCreate"
+                      @edit="openEdit"
                     />
                   </div>
                 </div>
@@ -134,6 +144,7 @@
               :teams="detail.teams"
               :manageable="manageable"
               @create="openCreate"
+              @edit="openEdit"
             />
             <div v-else class="text-body-medium text-medium-emphasis">
               {{ $t("Tournament.PlayoffPending", { n: info.settings.group_advance ?? 1 }) }}
@@ -167,6 +178,7 @@
                     :teams="detail.teams"
                     :manageable="manageable"
                     @create="openCreate"
+                    @edit="openEdit"
                   />
                 </div>
               </div>
@@ -177,6 +189,8 @@
     </template>
 
     <TournamentDialog v-model="editOpen" :detail="detail" @saved="load" />
+    <TournamentTeamsDialog v-model="teamsOpen" :detail="detail" @saved="load" />
+    <NodeEditDialog v-model="nodeEditOpen" :node="editNode" :detail="detail" @saved="load" />
 
     <!-- One slot's match on a chosen server. -->
     <v-dialog v-model="createOpen" max-width="480">
@@ -235,7 +249,9 @@ import type { Server, TournamentDetail, TournamentNode } from "@/api/types";
 import BracketView from "@/components/tournament/BracketView.vue";
 import StandingsTable from "@/components/tournament/StandingsTable.vue";
 import TournamentDialog from "@/components/tournament/TournamentDialog.vue";
+import NodeEditDialog from "@/components/tournament/NodeEditDialog.vue";
 import TournamentNodeCard from "@/components/tournament/TournamentNodeCard.vue";
+import TournamentTeamsDialog from "@/components/tournament/TournamentTeamsDialog.vue";
 import TournamentStream from "@/components/tournament/TournamentStream.vue";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
@@ -253,6 +269,9 @@ const detail = ref<TournamentDetail | null>(null);
 const loading = ref(true);
 const busy = ref(false);
 const editOpen = ref(false);
+const teamsOpen = ref(false);
+const nodeEditOpen = ref(false);
+const editNode = ref<TournamentNode | null>(null);
 const confirmStart = ref(false);
 const confirmDelete = ref(false);
 const createOpen = ref(false);
@@ -282,7 +301,9 @@ const champion = computed(() => {
   if (!d || d.tournament.status !== "finished") return "";
   const final = d.nodes.find((node) => node.final && node.winner_id != null);
   if (final) return teamName(final.winner_id);
-  return d.standings?.[0] ? teamName(d.standings[0].team_id) : "";
+  const disqualified = new Set(d.teams.filter((team) => team.disqualified).map((team) => team.id));
+  const top = d.standings?.find((row) => !disqualified.has(row.team_id));
+  return top ? teamName(top.team_id) : "";
 });
 
 const groupRounds = computed(() => {
@@ -380,6 +401,11 @@ async function loadServers() {
       Number(b.user_id === auth.user?.id) - Number(a.user_id === auth.user?.id) ||
       Number(b.public_server) - Number(a.public_server)
   );
+}
+
+function openEdit(node: TournamentNode) {
+  editNode.value = node;
+  nodeEditOpen.value = true;
 }
 
 async function openCreate(node: TournamentNode) {

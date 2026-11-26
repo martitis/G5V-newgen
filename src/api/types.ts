@@ -461,6 +461,8 @@ export interface TournamentNode {
   winner_id: number | null;
   status: "pending" | "ready" | "live" | "done" | "bye" | "empty";
   match_id: number | null;
+  /** An admin set this slot's teams by hand (can be reset to the generated ones). */
+  manual?: boolean;
   /** Server of the linked match (its address comes from GET /servers/:id, for those allowed to see it). */
   server_id?: number | null;
   best_of: number;
@@ -487,6 +489,8 @@ export interface TournamentDetail {
     tag: string | null;
     logo: string | null;
     flag: string | null;
+    /** Loses every slot it hasn't played yet. */
+    disqualified?: boolean;
   }[];
   nodes: TournamentNode[];
   standings: TournamentStanding[] | null;

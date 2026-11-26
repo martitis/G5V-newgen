@@ -314,7 +314,22 @@ export const tournaments = {
   update: (id: number, body: Body) => put<MessageResponse>(`/tournaments/${id}`, wrap(body)),
   remove: (id: number) => del<MessageResponse>(`/tournaments/${id}`),
   start: (id: number) => post<MessageResponse>(`/tournaments/${id}/start`),
-  refresh: (id: number) => post<MessageResponse>(`/tournaments/${id}/refresh`)
+  refresh: (id: number) => post<MessageResponse>(`/tournaments/${id}/refresh`),
+  /** Disqualifies a team (or reinstates it); returns the unfinished matches unlinked from its slots. */
+  setDisqualified: (id: number, teamId: number, disqualified: boolean) =>
+    put<MessageResponse & { unlinked_match_ids: number[] }>(
+      `/tournaments/${id}/teams/${teamId}`,
+      wrap({ disqualified })
+    ),
+  /** Sets a slot's teams (null = bye), or `{ reset: true }` for the generated ones. */
+  setNodeTeams: (
+    id: number,
+    nodeId: number,
+    body: { team1_id: number | null; team2_id: number | null } | { reset: true }
+  ) => put<MessageResponse>(`/tournaments/${id}/nodes/${nodeId}`, wrap(body)),
+  /** Links an existing match to a ready slot, or unlinks it with null. */
+  setNodeMatch: (id: number, nodeId: number, matchId: number | null) =>
+    put<MessageResponse>(`/tournaments/${id}/nodes/${nodeId}/match`, wrap({ match_id: matchId }))
 };
 
 export const pugs = {
